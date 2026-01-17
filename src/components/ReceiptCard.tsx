@@ -70,7 +70,7 @@ const ReceiptCard = forwardRef<HTMLDivElement, ReceiptCardProps>(({ data }, ref)
                     marginBottom: '10px',
                 }}>
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                        <img src="/globe.svg" alt="Logo" style={{ width: '50px', height: '50px', objectFit: 'contain' }} />
+                        <img src="/logo.png" alt="Logo" style={{ width: '50px', height: '50px', objectFit: 'contain' }} />
                         <div>
                             <h1 style={{ fontSize: '20px', fontWeight: 'bold', color: '#15803d', margin: 0, lineHeight: 1.2 }}>
                                 આર્ષ અધ્યયન કેન્દ્ર, ભુજ
