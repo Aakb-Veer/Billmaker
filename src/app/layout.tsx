@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth";
@@ -13,11 +13,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  themeColor: "#FF4500",
+};
+
 export const metadata: Metadata = {
   title: "આર્ષ અધ્યયન કેન્દ્ર - Billing System",
   description: "Donation & Receipt Management for Arsh Adhyayan Kendra, Bhuj",
   manifest: "/manifest.json",
-  themeColor: "#FF4500",
 };
 
 export default function RootLayout({
