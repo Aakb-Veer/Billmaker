@@ -22,17 +22,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Check for existing session on mount
     useEffect(() => {
+        let isMounted = true;
+
         const initAuth = async () => {
             try {
                 const { data: { session } } = await supabase.auth.getSession();
+                if (!isMounted) return;
+
                 if (session?.user) {
                     setSupabaseUser(session.user);
                     await fetchUserProfile(session.user.email!);
                 }
-            } catch (error) {
-                console.error('Auth init error:', error);
+            } catch (error: unknown) {
+                // Ignore abort errors - they're expected during fast navigation
+                if (error instanceof Error && error.name === 'AbortError') {
+                    return;
+                }
+                if (isMounted) {
+                    console.error('Auth init error:', error);
+                }
             } finally {
-                setIsLoading(false);
+                if (isMounted) {
+                    setIsLoading(false);
+                }
             }
         };
 
@@ -40,6 +52,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         // Listen for auth changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+            if (!isMounted) return;
+
             if (session?.user) {
                 setSupabaseUser(session.user);
                 await fetchUserProfile(session.user.email!);
@@ -50,7 +64,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setIsLoading(false);
         });
 
-        return () => subscription.unsubscribe();
+        return () => {
+            isMounted = false;
+            subscription.unsubscribe();
+        };
     }, []);
 
     const fetchUserProfile = async (email: string) => {
