@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,12 +36,17 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
+        <link rel="apple-touch-icon" href="/logo.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="AAKB Billing" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-br from-orange-50 via-white to-amber-50 min-h-screen`}
       >
         <AuthProvider>
           {children}
+          <PWAInstallPrompt />
         </AuthProvider>
       </body>
     </html>

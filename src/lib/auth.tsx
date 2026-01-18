@@ -24,6 +24,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         let isMounted = true;
 
+        // Safety timeout - stop loading after 5 seconds max
+        const loadingTimeout = setTimeout(() => {
+            if (isMounted && isLoading) {
+                setIsLoading(false);
+            }
+        }, 5000);
+
         const initAuth = async () => {
             try {
                 const { data: { session } } = await supabase.auth.getSession();
@@ -66,6 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         return () => {
             isMounted = false;
+            clearTimeout(loadingTimeout);
             subscription.unsubscribe();
         };
     }, []);
