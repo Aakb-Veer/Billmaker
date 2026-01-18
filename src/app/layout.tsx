@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth";
+import { ServiceWorkerProvider } from "@/lib/serviceWorker";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 
 const geistSans = Geist({
@@ -44,10 +45,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-br from-orange-50 via-white to-amber-50 min-h-screen`}
       >
-        <AuthProvider>
-          {children}
-          <PWAInstallPrompt />
-        </AuthProvider>
+        <ServiceWorkerProvider>
+          <AuthProvider>
+            {children}
+            <PWAInstallPrompt />
+          </AuthProvider>
+        </ServiceWorkerProvider>
       </body>
     </html>
   );
