@@ -145,7 +145,7 @@ const ReceiptCard = forwardRef<HTMLDivElement, ReceiptCardProps>(({ data }, ref)
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span style={{ color: '#666', minWidth: '140px', fontWeight: 500 }}>નોંધ / હેતુ:</span>
                         <span style={{ flex: 1, fontWeight: 500, borderBottom: '1px dotted #999', paddingBottom: '2px', color: data.remarks ? '#1a1a1a' : '#888', fontStyle: data.remarks ? 'normal' : 'italic' }}>
-                            {data.remarks || 'દાન / અર્પણ'}
+                            {data.remarks ? smartTransliterate(data.remarks) : 'દાન / અર્પણ'}
                         </span>
                     </div>
                 </div>
