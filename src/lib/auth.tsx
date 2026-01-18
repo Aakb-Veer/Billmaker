@@ -15,21 +15,45 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Helper to get cached user from localStorage
+const getCachedUser = (): User | null => {
+    if (typeof window === 'undefined') return null;
+    try {
+        const cached = localStorage.getItem('aakb_user');
+        if (cached) return JSON.parse(cached);
+    } catch { }
+    return null;
+};
+
+// Helper to cache user to localStorage
+const setCachedUser = (user: User | null) => {
+    if (typeof window === 'undefined') return;
+    try {
+        if (user) {
+            localStorage.setItem('aakb_user', JSON.stringify(user));
+        } else {
+            localStorage.removeItem('aakb_user');
+        }
+    } catch { }
+};
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const [user, setUser] = useState<User | null>(null);
+    // Initialize with cached user for instant loading
+    const [user, setUser] = useState<User | null>(() => getCachedUser());
     const [supabaseUser, setSupabaseUser] = useState<SupabaseUser | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    // If we have cached user, don't show loading initially
+    const [isLoading, setIsLoading] = useState(() => !getCachedUser());
 
     // Check for existing session on mount
     useEffect(() => {
         let isMounted = true;
 
-        // Safety timeout - stop loading after 5 seconds max
+        // Quick timeout - stop loading after 3 seconds max
         const loadingTimeout = setTimeout(() => {
-            if (isMounted && isLoading) {
+            if (isMounted) {
                 setIsLoading(false);
             }
-        }, 5000);
+        }, 3000);
 
         const initAuth = async () => {
             try {
@@ -39,15 +63,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 if (session?.user) {
                     setSupabaseUser(session.user);
                     await fetchUserProfile(session.user.email!);
+                } else {
+                    // No session - clear cached user
+                    setUser(null);
+                    setCachedUser(null);
                 }
             } catch (error: unknown) {
-                // Ignore abort errors - they're expected during fast navigation
                 if (error instanceof Error && error.name === 'AbortError') {
                     return;
                 }
-                if (isMounted) {
-                    console.error('Auth init error:', error);
-                }
+                console.error('Auth init error:', error);
             } finally {
                 if (isMounted) {
                     setIsLoading(false);
@@ -67,6 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             } else {
                 setSupabaseUser(null);
                 setUser(null);
+                setCachedUser(null);
             }
             setIsLoading(false);
         });
@@ -89,16 +115,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
             if (error || !data) {
                 setUser(null);
+                setCachedUser(null);
             } else {
                 setUser(data);
+                setCachedUser(data);
             }
         } catch {
             setUser(null);
+            setCachedUser(null);
         }
     };
 
     const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
-        // Check if email ends with @aakb.org.in
         if (!email.endsWith('@aakb.org.in')) {
             return { success: false, error: 'Only @aakb.org.in emails are allowed' };
         }
@@ -119,7 +147,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             }
 
             return { success: false, error: 'Login failed' };
-        } catch (error) {
+        } catch {
             return { success: false, error: 'Login failed. Please try again.' };
         }
     };
@@ -153,6 +181,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await supabase.auth.signOut();
         setUser(null);
         setSupabaseUser(null);
+        setCachedUser(null);
     };
 
     return (
