@@ -24,7 +24,7 @@ export default function SadhaksPage() {
         if (!isLoading && !user) {
             window.location.href = '/login';
         } else if (!isLoading && user && user.role !== 'admin') {
-            router.replace('/');
+            window.location.href = '/';
         }
     }, [user, isLoading, router]);
 
