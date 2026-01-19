@@ -11,9 +11,9 @@ export default function Home() {
 
   useEffect(() => {
     if (!isLoading && !user) {
-      router.replace('/login');
+      window.location.href = '/login';
     }
-  }, [user, isLoading, router]);
+  }, [user, isLoading]);
 
   // Show minimal loading only if no cached user
   if (isLoading && !user) {
