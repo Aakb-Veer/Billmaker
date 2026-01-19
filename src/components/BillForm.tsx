@@ -34,7 +34,7 @@ export default function BillForm({ userEmail = 'staff@aakb.org.in', userName = '
                     .select('receipt_no')
                     .order('receipt_no', { ascending: false })
                     .limit(1)
-                    .single();
+                    .maybeSingle();
 
                 if (data && !error) {
                     setNextReceiptNo(data.receipt_no + 1);
