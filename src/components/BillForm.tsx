@@ -84,8 +84,13 @@ export default function BillForm({ userEmail = 'staff@aakb.org.in', userName = '
                 quality: 1,
                 pixelRatio: 3, // High quality
                 backgroundColor: '#fff8f0',
-                skipFonts: true,
                 cacheBust: true,
+                style: {
+                    fontFamily: '"Noto Sans Gujarati", sans-serif',
+                },
+                fontEmbedCSS: `
+                    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;500;600;700&display=swap');
+                `,
             });
 
             const link = document.createElement('a');
@@ -110,8 +115,13 @@ export default function BillForm({ userEmail = 'staff@aakb.org.in', userName = '
                 quality: 0.95,
                 pixelRatio: 3,
                 backgroundColor: '#fff8f0',
-                skipFonts: true,
                 cacheBust: true,
+                style: {
+                    fontFamily: '"Noto Sans Gujarati", sans-serif',
+                },
+                fontEmbedCSS: `
+                    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;500;600;700&display=swap');
+                `,
             });
 
             const link = document.createElement('a');
