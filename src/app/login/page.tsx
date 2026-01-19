@@ -34,12 +34,13 @@ export default function LoginPage() {
         const result = await action(email, password);
 
         if (result.success) {
-            // Will redirect via useEffect when user state updates
+            // Immediate redirect using window.location for mobile compatibility
+            const redirectPath = isSignup ? '/login' : '/bill';
+            window.location.href = redirectPath;
         } else {
             setError(result.error || 'Action failed');
+            setIsLoading(false);
         }
-
-        setIsLoading(false);
     };
 
     // Show loading while checking auth
