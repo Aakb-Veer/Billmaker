@@ -11,11 +11,12 @@ export default function Home() {
 
   useEffect(() => {
     if (!isLoading && !user) {
-      router.push('/login');
+      router.replace('/login');
     }
   }, [user, isLoading, router]);
 
-  if (isLoading) {
+  // Show minimal loading only if no cached user
+  if (isLoading && !user) {
     return (
       <main className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -61,94 +62,68 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Navigation Cards */}
-      <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-        {/* Bill Maker Card */}
-        <Link href="/bill" className="group">
-          <div className="bg-white rounded-2xl shadow-xl border border-orange-100 p-6 md:p-8 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 h-full">
-            <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center text-3xl md:text-4xl mb-4 md:mb-6 group-hover:scale-110 transition-transform shadow-lg">
-              🧾
-            </div>
-            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">Create New Bill</h2>
-            <p className="text-sm md:text-base text-gray-600 mb-4">
-              Search or add Sadhak, enter amount, and generate receipt instantly.
-            </p>
-            <div className="flex items-center text-orange-600 font-semibold text-sm md:text-base">
-              Start Billing
-              <svg className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </div>
-          </div>
-        </Link>
-
-        {/* Admin/Search Card */}
-        <Link href="/admin" className="group">
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 md:p-8 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 h-full">
-            <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-slate-500 to-slate-700 rounded-2xl flex items-center justify-center text-3xl md:text-4xl mb-4 md:mb-6 group-hover:scale-110 transition-transform shadow-lg">
-              🔍
-            </div>
-            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">Search History</h2>
-            <p className="text-sm md:text-base text-gray-600 mb-4">
-              Find old receipts by Sadhak name or date. Re-share any receipt.
-            </p>
-            <div className="flex items-center text-slate-600 font-semibold text-sm md:text-base">
-              View All Receipts
-              <svg className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </div>
-          </div>
-        </Link>
-
-        {/* Sadhak Management Card - Admin Only */}
-        {user.role === 'admin' && (
-          <Link href="/sadhaks" className="group">
-            <div className="bg-white rounded-2xl shadow-xl border border-green-100 p-6 md:p-8 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 h-full">
-              <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-green-500 to-green-700 rounded-2xl flex items-center justify-center text-3xl md:text-4xl mb-4 md:mb-6 group-hover:scale-110 transition-transform shadow-lg">
-                👥
-              </div>
-              <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">Manage Sadhaks</h2>
-              <p className="text-sm md:text-base text-gray-600 mb-4">
-                Edit Sadhak names, phone numbers, and default amounts.
-              </p>
-              <div className="flex items-center text-green-600 font-semibold text-sm md:text-base">
-                View All Sadhaks
-                <svg className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </div>
-            </div>
+      {/* Quick Actions Grid */}
+      <section className="max-w-6xl mx-auto">
+        <h2 className="text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+          <Link
+            href="/bill"
+            className="bg-white rounded-xl p-4 md:p-6 border border-gray-200 hover:border-orange-300 hover:shadow-lg transition-all group"
+          >
+            <div className="text-3xl md:text-4xl mb-2 group-hover:scale-110 transition-transform">🧾</div>
+            <h3 className="font-bold text-gray-800 text-sm md:text-base">Create Bill</h3>
+            <p className="text-xs text-gray-500 mt-1">Generate new receipt</p>
           </Link>
-        )}
 
-        {/* Admin Panel - Only for admins */}
-        {user.role === 'admin' && (
-          <Link href="/settings" className="group">
-            <div className="bg-white rounded-2xl shadow-xl border border-purple-100 p-6 md:p-8 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 h-full">
-              <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-purple-500 to-purple-700 rounded-2xl flex items-center justify-center text-3xl md:text-4xl mb-4 md:mb-6 group-hover:scale-110 transition-transform shadow-lg">
-                ⚙️
-              </div>
-              <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">Admin Settings</h2>
-              <p className="text-sm md:text-base text-gray-600 mb-4">
-                Manage users, WhatsApp settings, and organization details
-              </p>
-              <div className="flex items-center text-purple-600 font-semibold text-sm md:text-base">
-                Open Settings
-                <svg className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </div>
-            </div>
+          <Link
+            href="/admin"
+            className="bg-white rounded-xl p-4 md:p-6 border border-gray-200 hover:border-orange-300 hover:shadow-lg transition-all group"
+          >
+            <div className="text-3xl md:text-4xl mb-2 group-hover:scale-110 transition-transform">📋</div>
+            <h3 className="font-bold text-gray-800 text-sm md:text-base">View Receipts</h3>
+            <p className="text-xs text-gray-500 mt-1">Search & manage</p>
           </Link>
-        )}
-      </div>
 
-      {/* Footer */}
-      <footer className="max-w-4xl mx-auto mt-8 md:mt-12 text-center text-xs md:text-sm text-gray-500">
-        <p>📍 Ashram Kutir, 244, Street No 9, Madhapar, Bhuj-Kutch</p>
-        <p className="mt-1">📞 94848 32029 | ✉️ ashram@aakb.org.in</p>
-      </footer>
+          <Link
+            href="/sadhaks"
+            className="bg-white rounded-xl p-4 md:p-6 border border-gray-200 hover:border-orange-300 hover:shadow-lg transition-all group"
+          >
+            <div className="text-3xl md:text-4xl mb-2 group-hover:scale-110 transition-transform">👥</div>
+            <h3 className="font-bold text-gray-800 text-sm md:text-base">Sadhaks</h3>
+            <p className="text-xs text-gray-500 mt-1">Manage donors</p>
+          </Link>
+
+          {user.role === 'admin' && (
+            <Link
+              href="/settings"
+              className="bg-white rounded-xl p-4 md:p-6 border border-gray-200 hover:border-orange-300 hover:shadow-lg transition-all group"
+            >
+              <div className="text-3xl md:text-4xl mb-2 group-hover:scale-110 transition-transform">⚙️</div>
+              <h3 className="font-bold text-gray-800 text-sm md:text-base">Settings</h3>
+              <p className="text-xs text-gray-500 mt-1">Admin panel</p>
+            </Link>
+          )}
+        </div>
+      </section>
+
+      {/* Today's Stats */}
+      <section className="max-w-6xl mx-auto mt-6 md:mt-8">
+        <h2 className="text-lg font-bold text-gray-800 mb-4">Today&apos;s Summary</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+          <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 border border-green-200">
+            <p className="text-xs text-green-600 font-medium">Status</p>
+            <p className="text-lg md:text-2xl font-bold text-green-700">Active</p>
+          </div>
+          <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 border border-orange-200">
+            <p className="text-xs text-orange-600 font-medium">Role</p>
+            <p className="text-lg md:text-2xl font-bold text-orange-700 capitalize">{user.role.replace('_', ' ')}</p>
+          </div>
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 border border-blue-200 col-span-2 md:col-span-1">
+            <p className="text-xs text-blue-600 font-medium">Email</p>
+            <p className="text-sm md:text-base font-bold text-blue-700 truncate">{user.email}</p>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

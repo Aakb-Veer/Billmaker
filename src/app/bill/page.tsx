@@ -12,11 +12,12 @@ export default function BillPage() {
 
     useEffect(() => {
         if (!isLoading && !user) {
-            router.push('/login');
+            router.replace('/login');
         }
     }, [user, isLoading, router]);
 
-    if (isLoading) {
+    // Show loading only if no cached user
+    if (isLoading && !user) {
         return (
             <main className="min-h-screen flex items-center justify-center">
                 <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
@@ -49,30 +50,30 @@ export default function BillPage() {
                         <span className="text-gray-600 hidden sm:inline">{user.name}</span>
                         <Link
                             href="/admin"
-                            className="px-3 py-1.5 md:px-4 md:py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+                            className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
                         >
-                            🔍 History
+                            Receipts
                         </Link>
                         <Link
-                            href="/"
-                            className="px-3 py-1.5 md:px-4 md:py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+                            href="/sadhaks"
+                            className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
                         >
-                            🏠
+                            Sadhaks
                         </Link>
                         <button
                             onClick={logout}
                             className="px-3 py-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         >
-                            ↗
+                            Logout
                         </button>
                     </nav>
                 </div>
             </header>
 
-            {/* Main Content */}
-            <div className="max-w-6xl mx-auto">
+            {/* Bill Form */}
+            <section className="max-w-6xl mx-auto">
                 <BillForm userEmail={user.email} userName={user.name} />
-            </div>
+            </section>
         </main>
     );
 }
