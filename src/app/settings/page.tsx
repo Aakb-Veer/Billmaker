@@ -27,9 +27,9 @@ export default function SettingsPage() {
 
     useEffect(() => {
         if (!isLoading && !user) {
-            router.push('/login');
+            router.replace('/login');
         } else if (user && user.role !== 'admin') {
-            router.push('/');
+            router.replace('/');
         }
     }, [user, isLoading, router]);
 

@@ -22,9 +22,9 @@ export default function SadhaksPage() {
 
     useEffect(() => {
         if (!isLoading && !user) {
-            router.push('/login');
+            router.replace('/login');
         } else if (!isLoading && user && user.role !== 'admin') {
-            router.push('/');
+            router.replace('/');
         }
     }, [user, isLoading, router]);
 

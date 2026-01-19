@@ -21,7 +21,7 @@ export default function LoginPage() {
     // Redirect if already logged in
     useEffect(() => {
         if (!isAuthLoading && user) {
-            router.push(getRedirectPath(user.role));
+            router.replace(getRedirectPath(user.role));
         }
     }, [user, isAuthLoading, router]);
 
