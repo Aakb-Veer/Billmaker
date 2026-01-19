@@ -154,25 +154,53 @@ export default function BillForm({ userEmail = 'staff@aakb.org.in', userName = '
                 <title>Receipt #${savedReceipt?.receipt_no}</title>
                 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;500;600;700&display=swap" rel="stylesheet">
                 <style>
+                    * {
+                        box-sizing: border-box;
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                    }
+                    @page {
+                        size: A4 landscape;
+                        margin: 15mm;
+                    }
+                    html, body {
+                        margin: 0;
+                        padding: 0;
+                        width: 100%;
+                        height: 100%;
+                        font-family: "Noto Sans Gujarati", "Arial", sans-serif;
+                    }
                     body { 
-                        margin: 0; 
-                        padding: 20px; 
-                        display: flex; 
+                        display: flex;
+                        align-items: center;
                         justify-content: center;
-                        font-family: "Noto Sans Gujarati", sans-serif;
+                        background: #fff;
+                    }
+                    .receipt-container {
+                        transform: scale(1.5);
+                        transform-origin: center center;
                     }
                     @media print {
-                        body { padding: 0; }
+                        body {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                        .receipt-container {
+                            transform: scale(1.3);
+                        }
                     }
                 </style>
             </head>
             <body>
-                ${receiptRef.current.outerHTML}
+                <div class="receipt-container">
+                    ${receiptRef.current.outerHTML}
+                </div>
                 <script>
                     setTimeout(() => {
                         window.print();
                         window.close();
-                    }, 500);
+                    }, 800);
                 </script>
             </body>
             </html>
