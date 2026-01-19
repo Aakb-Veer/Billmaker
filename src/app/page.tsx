@@ -75,33 +75,35 @@ export default function Home() {
             <p className="text-xs text-gray-500 mt-1">Generate new receipt</p>
           </Link>
 
-          <Link
-            href="/admin"
-            className="bg-white rounded-xl p-4 md:p-6 border border-gray-200 hover:border-orange-300 hover:shadow-lg transition-all group"
-          >
-            <div className="text-3xl md:text-4xl mb-2 group-hover:scale-110 transition-transform">📋</div>
-            <h3 className="font-bold text-gray-800 text-sm md:text-base">View Receipts</h3>
-            <p className="text-xs text-gray-500 mt-1">Search & manage</p>
-          </Link>
-
-          <Link
-            href="/sadhaks"
-            className="bg-white rounded-xl p-4 md:p-6 border border-gray-200 hover:border-orange-300 hover:shadow-lg transition-all group"
-          >
-            <div className="text-3xl md:text-4xl mb-2 group-hover:scale-110 transition-transform">👥</div>
-            <h3 className="font-bold text-gray-800 text-sm md:text-base">Sadhaks</h3>
-            <p className="text-xs text-gray-500 mt-1">Manage donors</p>
-          </Link>
-
           {user.role === 'admin' && (
-            <Link
-              href="/settings"
-              className="bg-white rounded-xl p-4 md:p-6 border border-gray-200 hover:border-orange-300 hover:shadow-lg transition-all group"
-            >
-              <div className="text-3xl md:text-4xl mb-2 group-hover:scale-110 transition-transform">⚙️</div>
-              <h3 className="font-bold text-gray-800 text-sm md:text-base">Settings</h3>
-              <p className="text-xs text-gray-500 mt-1">Admin panel</p>
-            </Link>
+            <>
+              <Link
+                href="/admin"
+                className="bg-white rounded-xl p-4 md:p-6 border border-gray-200 hover:border-orange-300 hover:shadow-lg transition-all group"
+              >
+                <div className="text-3xl md:text-4xl mb-2 group-hover:scale-110 transition-transform">📋</div>
+                <h3 className="font-bold text-gray-800 text-sm md:text-base">View Receipts</h3>
+                <p className="text-xs text-gray-500 mt-1">Search & manage</p>
+              </Link>
+
+              <Link
+                href="/sadhaks"
+                className="bg-white rounded-xl p-4 md:p-6 border border-gray-200 hover:border-orange-300 hover:shadow-lg transition-all group"
+              >
+                <div className="text-3xl md:text-4xl mb-2 group-hover:scale-110 transition-transform">👥</div>
+                <h3 className="font-bold text-gray-800 text-sm md:text-base">Sadhaks</h3>
+                <p className="text-xs text-gray-500 mt-1">Manage donors</p>
+              </Link>
+
+              <Link
+                href="/settings"
+                className="bg-white rounded-xl p-4 md:p-6 border border-gray-200 hover:border-orange-300 hover:shadow-lg transition-all group"
+              >
+                <div className="text-3xl md:text-4xl mb-2 group-hover:scale-110 transition-transform">⚙️</div>
+                <h3 className="font-bold text-gray-800 text-sm md:text-base">Settings</h3>
+                <p className="text-xs text-gray-500 mt-1">Admin panel</p>
+              </Link>
+            </>
           )}
         </div>
       </section>
