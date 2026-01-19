@@ -22,7 +22,7 @@ export default function SadhaksPage() {
 
     useEffect(() => {
         if (!isLoading && !user) {
-            router.replace('/login');
+            window.location.href = '/login';
         } else if (!isLoading && user && user.role !== 'admin') {
             router.replace('/');
         }

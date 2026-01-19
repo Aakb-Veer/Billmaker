@@ -27,7 +27,7 @@ export default function SettingsPage() {
 
     useEffect(() => {
         if (!isLoading && !user) {
-            router.replace('/login');
+            window.location.href = '/login';
         } else if (user && user.role !== 'admin') {
             router.replace('/');
         }

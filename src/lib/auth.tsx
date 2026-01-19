@@ -60,12 +60,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         let isMounted = true;
 
-        // Quick timeout - stop loading after 3 seconds max
+        // Timeout - stop loading after 10 seconds (Supabase cold start can take time)
         const loadingTimeout = setTimeout(() => {
             if (isMounted) {
                 setIsLoading(false);
             }
-        }, 3000);
+        }, 10000);
 
         const initAuth = async () => {
             try {

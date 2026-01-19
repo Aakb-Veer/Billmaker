@@ -33,9 +33,9 @@ export default function AdminPage() {
 
     useEffect(() => {
         if (!isLoading && !user) {
-            router.replace('/login');
+            window.location.href = '/login';
         }
-    }, [user, isLoading, router]);
+    }, [user, isLoading]);
 
     // Fetch receipts
     const fetchReceipts = async () => {
