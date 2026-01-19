@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { toPng, toJpeg } from 'html-to-image';
 import { jsPDF } from 'jspdf';
 import { supabase, Sadhak, Receipt } from '@/lib/supabase';
@@ -22,7 +22,32 @@ export default function BillForm({ userEmail = 'staff@aakb.org.in', userName = '
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [savedReceipt, setSavedReceipt] = useState<Receipt & { sadhak_name: string } | null>(null);
     const [isExporting, setIsExporting] = useState(false);
+    const [nextReceiptNo, setNextReceiptNo] = useState<number>(1);
     const receiptRef = useRef<HTMLDivElement>(null);
+
+    // Fetch next receipt number on mount
+    useEffect(() => {
+        const fetchNextReceiptNo = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('receipts')
+                    .select('receipt_no')
+                    .order('receipt_no', { ascending: false })
+                    .limit(1)
+                    .single();
+
+                if (data && !error) {
+                    setNextReceiptNo(data.receipt_no + 1);
+                } else {
+                    setNextReceiptNo(1);
+                }
+            } catch {
+                setNextReceiptNo(1);
+            }
+        };
+        fetchNextReceiptNo();
+    }, [savedReceipt]); // Refresh when a receipt is saved
+
 
     // Handle sadhak selection - auto-fill amount
     const handleSadhakSelect = (sadhak: Sadhak) => {
@@ -529,7 +554,7 @@ export default function BillForm({ userEmail = 'staff@aakb.org.in', userName = '
                                 <ReceiptCard
                                     ref={receiptRef}
                                     data={{
-                                        receipt_no: savedReceipt?.receipt_no || 0,
+                                        receipt_no: savedReceipt?.receipt_no || nextReceiptNo,
                                         sadhak_name: selectedSadhak?.name || '',
                                         amount: parseInt(amount) || 0,
                                         date: date,

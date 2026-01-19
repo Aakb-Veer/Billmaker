@@ -101,15 +101,21 @@ const ReceiptCard = forwardRef<HTMLDivElement, ReceiptCardProps>(({ data }, ref)
                 <div style={{
                     display: 'flex',
                     justifyContent: 'space-between',
+                    alignItems: 'center',
                     fontSize: '13px',
                     fontWeight: 600,
                     marginBottom: '10px',
                     background: '#fef3c7',
                     padding: '6px 10px',
                     borderRadius: '6px',
+                    whiteSpace: 'nowrap',
                 }}>
-                    <span>રસીદ નં. <span style={{ color: '#dc2626' }}>{toGujaratiNumber(data.receipt_no)}</span></span>
-                    <span>તારીખ: {formatDateGujarati(data.date)}</span>
+                    <span style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
+                        રસીદ નં. <span style={{ color: '#dc2626', display: 'inline' }}>{toGujaratiNumber(data.receipt_no)}</span>
+                    </span>
+                    <span style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
+                        તારીખ: {formatDateGujarati(data.date)}
+                    </span>
                 </div>
 
                 {/* BODY FIELDS */}
