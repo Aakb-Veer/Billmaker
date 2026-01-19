@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { toPng, toJpeg } from 'html-to-image';
+import { jsPDF } from 'jspdf';
 import { supabase, Sadhak, Receipt } from '@/lib/supabase';
 import { getTodayISO } from '@/lib/utils';
 import SadhakCombobox from './SadhakCombobox';
@@ -179,6 +180,69 @@ export default function BillForm({ userEmail = 'staff@aakb.org.in', userName = '
         printWindow.document.close();
     };
 
+    // Export as PDF (full page A4)
+    const exportAsPDF = async () => {
+        if (!receiptRef.current) return;
+        setIsExporting(true);
+
+        try {
+            const dataUrl = await toPng(receiptRef.current, {
+                quality: 1,
+                pixelRatio: 3,
+                backgroundColor: '#fff8f0',
+                cacheBust: true,
+                style: {
+                    fontFamily: '"Noto Sans Gujarati", sans-serif',
+                },
+                fontEmbedCSS: `
+                    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;500;600;700&display=swap');
+                `,
+            });
+
+            // Create A4 PDF (210 x 297 mm)
+            const pdf = new jsPDF({
+                orientation: 'landscape',
+                unit: 'mm',
+                format: 'a4',
+            });
+
+            // A4 landscape dimensions: 297 x 210 mm
+            const pageWidth = 297;
+            const pageHeight = 210;
+
+            // Calculate image dimensions to fit nicely on page with margins
+            const margin = 15;
+            const maxWidth = pageWidth - (margin * 2);
+            const maxHeight = pageHeight - (margin * 2);
+
+            // Get image dimensions
+            const img = new Image();
+            img.src = dataUrl;
+            await new Promise((resolve) => { img.onload = resolve; });
+
+            const imgRatio = img.width / img.height;
+            let imgWidth = maxWidth;
+            let imgHeight = imgWidth / imgRatio;
+
+            // If too tall, scale by height instead
+            if (imgHeight > maxHeight) {
+                imgHeight = maxHeight;
+                imgWidth = imgHeight * imgRatio;
+            }
+
+            // Center the image
+            const x = (pageWidth - imgWidth) / 2;
+            const y = (pageHeight - imgHeight) / 2;
+
+            pdf.addImage(dataUrl, 'PNG', x, y, imgWidth, imgHeight);
+            pdf.save(getFilename('pdf'));
+        } catch (error) {
+            console.error('PDF export error:', error);
+            alert('Failed to export PDF');
+        } finally {
+            setIsExporting(false);
+        }
+    };
     // Share via native share
     const shareReceipt = async () => {
         if (!receiptRef.current) return;
@@ -354,7 +418,7 @@ export default function BillForm({ userEmail = 'staff@aakb.org.in', userName = '
                     ) : (
                         <div className="space-y-3">
                             {/* Export Options */}
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid grid-cols-3 gap-3">
                                 <button
                                     type="button"
                                     onClick={exportAsPNG}
@@ -370,6 +434,14 @@ export default function BillForm({ userEmail = 'staff@aakb.org.in', userName = '
                                     className="py-3 bg-purple-500 hover:bg-purple-600 text-white font-medium rounded-xl flex items-center justify-center gap-2 disabled:opacity-50"
                                 >
                                     🖼️ JPEG
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={exportAsPDF}
+                                    disabled={isExporting}
+                                    className="py-3 bg-red-500 hover:bg-red-600 text-white font-medium rounded-xl flex items-center justify-center gap-2 disabled:opacity-50"
+                                >
+                                    📄 PDF
                                 </button>
                             </div>
 
