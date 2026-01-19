@@ -38,14 +38,26 @@ const setCachedUser = (user: User | null) => {
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    // Initialize with cached user for instant loading
-    const [user, setUser] = useState<User | null>(() => getCachedUser());
+    // Initialize as null to avoid hydration mismatch
+    const [user, setUser] = useState<User | null>(null);
     const [supabaseUser, setSupabaseUser] = useState<SupabaseUser | null>(null);
-    // If we have cached user, don't show loading initially
-    const [isLoading, setIsLoading] = useState(() => !getCachedUser());
+    const [isLoading, setIsLoading] = useState(true);
+    const [hasMounted, setHasMounted] = useState(false);
+
+    // Load cached user on mount (client-side only)
+    useEffect(() => {
+        setHasMounted(true);
+        const cached = getCachedUser();
+        if (cached) {
+            setUser(cached);
+            setIsLoading(false);
+        }
+    }, []);
 
     // Check for existing session on mount
     useEffect(() => {
+        if (!hasMounted) return;
+
         let isMounted = true;
 
         // Quick timeout - stop loading after 3 seconds max
@@ -102,7 +114,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             clearTimeout(loadingTimeout);
             subscription.unsubscribe();
         };
-    }, []);
+    }, [hasMounted]);
 
     const fetchUserProfile = async (email: string) => {
         try {
